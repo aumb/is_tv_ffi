@@ -1,15 +1,42 @@
 # is_tv_ffi
 
-A new Flutter plugin project.
+A Flutter plugin to detect if the current device is a TV.
 
-## Getting Started
+## Platform Support
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+| Android | iOS | MacOS | Web | Linux | Windows |
+| :-----: | :-: | :---: | :-: | :---: | :-----: |
+|   ✅    | 🚧  |  🚧   | 🚧  |  🚧   |   🚧    |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> Note: Support for other platforms is planned for future releases.
 
+## Installation
+
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+    is_tv_ffi: ^1.0.0
+```
+
+## Usage
+
+```dart
+import 'package:is_tv_ffi/is_tv_ffi.dart';
+
+// Check if the device is a TV
+final isTv = IsTvFfi().isTv;
+if (isTv) {
+  print('Running on a TV');
+} else {
+  print('Not running on a TV');
+}
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the
