@@ -1,27 +1,39 @@
 package com.example.is_tv_ffi
 
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import kotlin.test.Test
+import android.app.UiModeManager
+import android.content.Context
+import android.content.res.Configuration
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
-/*
- * This demonstrates a simple unit test of the Kotlin portion of this plugin's implementation.
- *
- * Once you have built the plugin's example app, you can run these tests from the command
- * line by running `./gradlew testDebugUnitTest` in the `example/android/` directory, or
- * you can run them directly from IDEs that support JUnit such as Android Studio.
- */
-
 internal class IsTvFfiPluginTest {
+
   @Test
-  fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
-    val plugin = IsTvFfiPlugin()
+  fun isTv_whenDeviceIsTelevision_returnsTrue() {
+    val mockContext = Mockito.mock(Context::class.java)
+    val mockUiModeManager = Mockito.mock(UiModeManager::class.java)
 
-    val call = MethodCall("getPlatformVersion", null)
-    val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)
-    plugin.onMethodCall(call, mockResult)
+    Mockito.`when`(mockContext.getSystemService(Context.UI_MODE_SERVICE)).thenReturn(mockUiModeManager)
+    Mockito.`when`(mockUiModeManager.currentModeType).thenReturn(Configuration.UI_MODE_TYPE_TELEVISION)
 
-    Mockito.verify(mockResult).success("Android " + android.os.Build.VERSION.RELEASE)
+    val plugin = IsTvFfiPlugin(mockContext)
+    val result = plugin.isTv()
+
+    assertEquals(true, result)
+  }
+
+  @Test
+  fun isTv_whenDeviceIsNotTelevision_returnsFalse() {
+    val mockContext = Mockito.mock(Context::class.java)
+    val mockUiModeManager = Mockito.mock(UiModeManager::class.java)
+
+    Mockito.`when`(mockContext.getSystemService(Context.UI_MODE_SERVICE)).thenReturn(mockUiModeManager)
+    Mockito.`when`(mockUiModeManager.currentModeType).thenReturn(Configuration.UI_MODE_TYPE_NORMAL) // Simulate a phone
+
+    val plugin = IsTvFfiPlugin(mockContext)
+    val result = plugin.isTv()
+
+    assertEquals(false, result)
   }
 }

@@ -1,8 +1,7 @@
-
-import 'is_tv_ffi_platform_interface.dart';
+import 'package:is_tv_ffi/src/is_tv.dart';
 
 class IsTvFfi {
-  Future<String?> getPlatformVersion() {
-    return IsTvFfiPlatform.instance.getPlatformVersion();
-  }
+  IsTv get _platform => IsTv.instance;
+
+  bool get isTv => _platform.isTv;
 }
