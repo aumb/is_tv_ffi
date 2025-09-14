@@ -31,6 +31,7 @@ abstract class IsTv {
     return _instance!;
   }
 
+  /// Sets the singleton instance of [IsTv].
   @visibleForTesting
   static void setInstance(IsTv? instance) {
     _instance = instance;
