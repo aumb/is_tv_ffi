@@ -30,3 +30,11 @@ flutter:
     platforms:
       android:
         ffiPlugin: true
+      ios:
+        pluginClass: none
+      linux:
+        pluginClass: none
+      macos:
+        pluginClass: none
+      windows:
+        pluginClass: none

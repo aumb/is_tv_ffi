@@ -38,7 +38,7 @@ import 'dart:core' as core$_;
 import 'package:jni/_internal.dart' as jni$_;
 import 'package:jni/jni.dart' as jni$_;
 
-/// from: `com.example.is_tv_ffi.IsTvFfiPlugin`
+/// from: `com.mathiewabbas.is_tv_ffi.IsTvFfiPlugin`
 class IsTvFfiPlugin extends jni$_.JObject {
   @jni$_.internal
   @core$_.override
@@ -50,7 +50,7 @@ class IsTvFfiPlugin extends jni$_.JObject {
       super.fromReference(reference);
 
   static final _class = jni$_.JClass.forName(
-    r'com/example/is_tv_ffi/IsTvFfiPlugin',
+    r'com/mathiewabbas/is_tv_ffi/IsTvFfiPlugin',
   );
 
   /// The type which includes information such as the signature of this class.
@@ -58,10 +58,10 @@ class IsTvFfiPlugin extends jni$_.JObject {
   static const type = $IsTvFfiPlugin$Type();
   static final _id_INSTANCE = _class.staticFieldId(
     r'INSTANCE',
-    r'Lcom/example/is_tv_ffi/IsTvFfiPlugin;',
+    r'Lcom/mathiewabbas/is_tv_ffi/IsTvFfiPlugin;',
   );
 
-  /// from: `static public final com.example.is_tv_ffi.IsTvFfiPlugin INSTANCE`
+  /// from: `static public final com.mathiewabbas.is_tv_ffi.IsTvFfiPlugin INSTANCE`
   /// The returned object must be released after use, by calling the [release] method.
   static IsTvFfiPlugin get INSTANCE =>
       _id_INSTANCE.get(_class, const $IsTvFfiPlugin$Type());
@@ -106,7 +106,7 @@ final class $IsTvFfiPlugin$NullableType extends jni$_.JObjType<IsTvFfiPlugin?> {
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Lcom/example/is_tv_ffi/IsTvFfiPlugin;';
+  String get signature => r'Lcom/mathiewabbas/is_tv_ffi/IsTvFfiPlugin;';
 
   @jni$_.internal
   @core$_.override
@@ -140,7 +140,7 @@ final class $IsTvFfiPlugin$Type extends jni$_.JObjType<IsTvFfiPlugin> {
 
   @jni$_.internal
   @core$_.override
-  String get signature => r'Lcom/example/is_tv_ffi/IsTvFfiPlugin;';
+  String get signature => r'Lcom/mathiewabbas/is_tv_ffi/IsTvFfiPlugin;';
 
   @jni$_.internal
   @core$_.override

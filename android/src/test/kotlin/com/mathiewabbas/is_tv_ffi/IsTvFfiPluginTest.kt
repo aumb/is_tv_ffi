@@ -1,4 +1,4 @@
-package com.example.is_tv_ffi
+package com.mathiewabbas.is_tv_ffi
 
 import android.app.UiModeManager
 import android.content.Context

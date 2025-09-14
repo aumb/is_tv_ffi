@@ -1,4 +1,4 @@
-package com.example.is_tv_ffi_example
+package com.mathiewabbas.is_tv_ffi_example
 
 import io.flutter.embedding.android.FlutterActivity
 
