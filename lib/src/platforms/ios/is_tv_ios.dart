@@ -9,7 +9,10 @@ import 'package:is_tv_ffi/src/platforms/ios/bindings.dart';
 /// This implementation checks the device configuration and user interface idiom
 /// to determine if it's running on an Apple TV device.
 class IsTvIOS extends IsTv {
-  /// Initializes the plugin
+  /// Creates a new instance of [IsTvIOS].
+  ///
+  /// This constructor is typically not called directly. Instead, use [IsTv.instance]
+  /// which will automatically create the correct platform implementation.
   IsTvIOS() {
     _dynamicLibrary = DynamicLibrary.process();
 

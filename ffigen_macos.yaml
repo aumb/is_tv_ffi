@@ -1,0 +1,13 @@
+name: IsTvFfiMacOSPlugin
+description: Bindings for MacOS isTv check.
+output: "lib/src/platforms/macos/bindings.dart"
+headers:
+  entry-points:
+    - "macos/Classes/IsTvFfiPlugin.h"
+  include-directives:
+    - "macos/Classes/IsTvFfiPlugin.h"
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field
+comments:
+  style: any
+  length: full

@@ -1,3 +1,9 @@
+## 0.3.0
+
+### Changes
+
+- Addeed MacOS support
+
 ## 0.2.0
 
 ### Changes
