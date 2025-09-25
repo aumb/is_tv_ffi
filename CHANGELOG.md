@@ -1,3 +1,9 @@
+## 0.2.0
+
+### Changes
+
+- Added IOS support
+
 ## 0.1.1
 
 ### Changes
