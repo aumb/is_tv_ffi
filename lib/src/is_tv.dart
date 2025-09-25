@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:is_tv_ffi/src/platforms/android/is_tv_android.dart';
+import 'package:is_tv_ffi/src/platforms/ios/is_tv_ios.dart';
 
 /// Base class for platform-specific TV detection implementations.
 ///
@@ -24,6 +25,7 @@ abstract class IsTv {
 
     _instance = switch (defaultTargetPlatform) {
       TargetPlatform.android => IsTvAndroid(),
+      TargetPlatform.iOS => IsTvIOS(),
       _ => throw UnsupportedError(
         'Unsupported platform: $defaultTargetPlatform',
       ),

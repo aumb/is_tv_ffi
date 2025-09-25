@@ -1,0 +1,13 @@
+name: IsTvFfiIOSPlugin
+description: Bindings for iOS/tvOS isTv check.
+output: "lib/src/platforms/ios/bindings.dart"
+headers:
+  entry-points:
+    - "ios/Classes/IsTvFfiPlugin.h"
+  include-directives:
+    - "ios/Classes/IsTvFfiPlugin.h"
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field
+comments:
+  style: any
+  length: full

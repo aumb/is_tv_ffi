@@ -1,19 +1,25 @@
-import Flutter
+import Foundation
 import UIKit
 
-public class IsTvFfiPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "is_tv_ffi", binaryMessenger: registrar.messenger())
-    let instance = IsTvFfiPlugin()
-    registrar.addMethodCallDelegate(instance, channel: channel)
-  }
+public protocol DeviceIdiomProvider {
+    var userInterfaceIdiom: UIUserInterfaceIdiom { get }
+}
 
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    switch call.method {
-    case "getPlatformVersion":
-      result("iOS " + UIDevice.current.systemVersion)
-    default:
-      result(FlutterMethodNotImplemented)
+extension UIDevice: DeviceIdiomProvider {}
+
+public class DeviceChecker {
+    private let device: DeviceIdiomProvider
+
+    public init(device: DeviceIdiomProvider = UIDevice.current) {
+        self.device = device
     }
-  }
+
+    public func isTV() -> Bool {
+        return device.userInterfaceIdiom == .tv
+    }
+}
+
+@_cdecl("is_tv")
+public func is_tv() -> Bool {
+    return DeviceChecker().isTV()
 }
