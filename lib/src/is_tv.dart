@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:is_tv_ffi/src/platforms/android/is_tv_android.dart';
-import 'package:is_tv_ffi/src/platforms/ios/is_tv_ios.dart';
-import 'package:is_tv_ffi/src/platforms/macos/is_tv_macos.dart';
+import 'package:is_tv_ffi/src/platforms/paltform_locator.dart';
 
 /// Base class for platform-specific TV detection implementations.
 ///
@@ -22,21 +20,11 @@ abstract class IsTv {
   /// The instance is created lazily on first access and cached for subsequent calls.
   /// Throws [UnsupportedError] if the current platform is not supported.
   static IsTv get instance {
-    if (_instance != null) return _instance!;
-
-    _instance = switch (defaultTargetPlatform) {
-      TargetPlatform.android => IsTvAndroid(),
-      TargetPlatform.iOS => IsTvIOS(),
-      TargetPlatform.macOS => IsTvMacOS(),
-      _ => throw UnsupportedError(
-        'Unsupported platform: $defaultTargetPlatform',
-      ),
-    };
-    return _instance!;
+    return _instance ??= platformInstance;
   }
 
   /// Sets the singleton instance of [IsTv].
-  @visibleForTesting
+  @internal
   static void setInstance(IsTv? instance) {
     _instance = instance;
   }

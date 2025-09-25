@@ -1,3 +1,9 @@
+## 0.4.0
+
+### Changes
+
+- Added Web support
+
 ## 0.3.0
 
 ### Changes

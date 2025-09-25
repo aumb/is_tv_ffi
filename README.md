@@ -6,7 +6,7 @@ A Flutter plugin to detect if the current device is a TV.
 
 | Android | iOS | MacOS | Web | Linux | Windows |
 | :-----: | :-: | :---: | :-: | :---: | :-----: |
-|   ✅    | ✅  |   ✅   | 🚧  |  🚧   |   🚧    |
+|   ✅    | ✅  |   ✅   | ✅  |  🚧   |   🚧    |
 
 > Note: Support for other platforms is planned for future releases.
 
