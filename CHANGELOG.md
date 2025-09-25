@@ -2,7 +2,7 @@
 
 ### Changes
 
-- Addeed MacOS support
+- Added MacOS support
 
 ## 0.2.0
 
