@@ -1,0 +1,13 @@
+name: IsTvFfiLinuxPlugin
+description: Bindings for Linux isTv check.
+output: "lib/src/platforms/linux/bindings.dart"
+headers:
+  entry-points:
+    - "linux/is_tv_linux.h"
+  include-directives:
+    - "linux/is_tv_linux.h"
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field
+comments:
+  style: any
+  length: full
