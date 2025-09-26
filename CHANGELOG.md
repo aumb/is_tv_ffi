@@ -1,3 +1,9 @@
+## 0.5.0
+
+### Changes
+
+- Added Linux support
+
 ## 0.4.0
 
 ### Changes
