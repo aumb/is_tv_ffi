@@ -1,5 +1,3 @@
-// is_tv_ffi/linux/is_tv_linux.cc
-
 #include "is_tv_linux.h"
 #include <cstdlib>
 #include <string.h>

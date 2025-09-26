@@ -31,9 +31,9 @@ apply_standard_settings(${PLUGIN_NAME})
 # Symbols are hidden by default to reduce the chance of accidental conflicts
 # between plugins. This should not be removed; any symbols that should be
 # exported should be explicitly exported with the FLUTTER_PLUGIN_EXPORT macro.
-set_target_properties(${PLUGIN_NAME} PROPERTIES
-  CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
+# set_target_properties(${PLUGIN_NAME} PROPERTIES
+#  CXX_VISIBILITY_PRESET hidden)
+# target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
@@ -93,3 +93,7 @@ gtest_discover_tests(${TEST_RUNNER})
 
 endif()  # CMake version check
 endif()  # include_${PROJECT_NAME}_tests
+
+install(TARGETS ${PLUGIN_NAME}
+  DESTINATION "lib"
+)

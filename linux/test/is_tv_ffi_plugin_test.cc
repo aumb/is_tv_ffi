@@ -1,31 +1,44 @@
-#include <flutter_linux/flutter_linux.h>
-#include <gmock/gmock.h>
+#include <cstdlib> // Required for setenv and unsetenv
 #include <gtest/gtest.h>
 
-#include "include/is_tv_ffi/is_tv_ffi_plugin.h"
-#include "is_tv_ffi_plugin_private.h"
-
-// This demonstrates a simple unit test of the C portion of this plugin's
-// implementation.
-//
-// Once you have built the plugin's example app, you can run these tests
-// from the command line. For instance, for a plugin called my_plugin
-// built for x64 debug, run:
-// $ build/linux/x64/debug/plugins/my_plugin/my_plugin_test
+// Include the header for the function we want to test
+#include "../is_tv_linux.h"
 
 namespace is_tv_ffi {
 namespace test {
 
-TEST(IsTvFfiPlugin, GetPlatformVersion) {
-  g_autoptr(FlMethodResponse) response = get_platform_version();
-  ASSERT_NE(response, nullptr);
-  ASSERT_TRUE(FL_IS_METHOD_SUCCESS_RESPONSE(response));
-  FlValue* result = fl_method_success_response_get_result(
-      FL_METHOD_SUCCESS_RESPONSE(response));
-  ASSERT_EQ(fl_value_get_type(result), FL_VALUE_TYPE_STRING);
-  // The full string varies, so just validate that it has the right format.
-  EXPECT_THAT(fl_value_get_string(result), testing::StartsWith("Linux "));
+// Test case for when no specific environment variables are set.
+TEST(IsTvLinux, IsTvReturnsFalseByDefault) {
+  // Ensure any test variables are cleared before running.
+  unsetenv("FLUTTER_IS_TV");
+
+  // Expect the function to return false when no TV indicators are present.
+  ASSERT_FALSE(is_tv());
 }
 
-}  // namespace test
-}  // namespace is_tv_ffi
+// Test case for when the FLUTTER_IS_TV variable is set to "1".
+TEST(IsTvLinux, IsTvReturnsTrueWhenFlutterIsTvSet) {
+  // Set the environment variable to simulate a TV environment.
+  setenv("FLUTTER_IS_TV", "1", 1);
+
+  // Expect the function to return true.
+  ASSERT_TRUE(is_tv());
+
+  // Clean up the environment variable after the test.
+  unsetenv("FLUTTER_IS_TV");
+}
+
+// Test case for an invalid value for FLUTTER_IS_TV.
+TEST(IsTvLinux, IsTvReturnsFalseForInvalidValue) {
+  // Set an invalid value.
+  setenv("FLUTTER_IS_TV", "0", 1);
+
+  // Expect it to return false.
+  ASSERT_FALSE(is_tv());
+
+  // Clean up.
+  unsetenv("FLUTTER_IS_TV");
+}
+
+} // namespace test
+} // namespace is_tv_ffi
