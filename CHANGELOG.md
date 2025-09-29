@@ -1,3 +1,9 @@
+## 0.65.0
+
+### Changes
+
+- Added Windows support
+
 ## 0.5.0
 
 ### Changes

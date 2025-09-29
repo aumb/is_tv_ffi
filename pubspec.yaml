@@ -1,6 +1,6 @@
 name: is_tv_ffi
 description: "A Flutter plugin to detect if the current device is a TV"
-version: 0.5.0
+version: 0.6.0
 homepage: https://github.com/aumb/is_tv_ffi
 repository: https://github.com/aumb/is_tv_ffi
 issue_tracker: https://github.com/aumb/is_tv_ffi/issues
@@ -37,8 +37,10 @@ flutter:
         ffiPlugin: true
       macos:
         ffiPlugin: true
+      linux:
+        ffiPlugin: true
+      windows:
+        ffiPlugin: true
       web:
         pluginClass: IsTvFfiWebPlugin
         fileName: src/platforms/web/bindings.dart
-      linux:
-        ffiPlugin: true
