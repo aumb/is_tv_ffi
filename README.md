@@ -8,8 +8,6 @@ A Flutter plugin to detect if the current device is a TV.
 | :-----: | :-: | :---: | :-: | :---: | :-----: |
 |   ✅    | ✅  |   ✅   | ✅  |  ✅   |   ✅    |
 
-> Note: Support for other platforms is planned for future releases.
-
 ## Installation
 
 Add this to your package's `pubspec.yaml` file:
