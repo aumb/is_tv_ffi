@@ -1,5 +1,6 @@
 #include "is_tv_windows.h"
 #include <cstdlib>
+#include <cstring>
 
 bool is_tv() {
   char *env_value;

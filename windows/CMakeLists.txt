@@ -27,8 +27,8 @@ list(APPEND PLUGIN_SOURCES
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} SHARED
-  "include/is_tv_ffi/is_tv_ffi_plugin_c_api.h"
-  "is_tv_ffi_plugin_c_api.cpp"
+  # "include/is_tv_ffi/is_tv_ffi_plugin_c_api.h"
+  # "is_tv_ffi_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
 )
 
@@ -37,12 +37,10 @@ add_library(${PLUGIN_NAME} SHARED
 # full control over build settings.
 apply_standard_settings(${PLUGIN_NAME})
 
-# Symbols are hidden by default to reduce the chance of accidental conflicts
-# between plugins. This should not be removed; any symbols that should be
-# exported should be explicitly exported with the FLUTTER_PLUGIN_EXPORT macro.
-set_target_properties(${PLUGIN_NAME} PROPERTIES
-  CXX_VISIBILITY_PRESET hidden)
-target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
+
+# set_target_properties(${PLUGIN_NAME} PROPERTIES
+#   CXX_VISIBILITY_PRESET hidden)
+# target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
 
 # Source include directories and library dependencies. Add any plugin-specific
 # dependencies here.
@@ -54,7 +52,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE flutter flutter_wrapper_plugin)
 # This list could contain prebuilt libraries, or libraries created by an
 # external build triggered from this build file.
 set(is_tv_ffi_bundled_libraries
-  ""
+  "$<TARGET_FILE:${PLUGIN_NAME}>"
   PARENT_SCOPE
 )
 

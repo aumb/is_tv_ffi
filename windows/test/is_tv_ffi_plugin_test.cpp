@@ -1,8 +1,6 @@
 #include <cstdlib>
 #include <gtest/gtest.h>
 
-// Include the header for the function we are testing.
-// The .. means "go up one directory" from test/ to windows/.
 #include "../is_tv_windows.h"
 
 namespace is_tv_ffi {
