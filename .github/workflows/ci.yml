@@ -68,7 +68,8 @@ jobs:
           target: google_apis
           arch: arm64-v8a
           profile: "pixel_4"
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -accel off
+          headless: true
+          emulator-options: -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
 
   android_tv_test:
@@ -87,5 +88,6 @@ jobs:
           target: google_apis
           arch: arm64-v8a
           profile: "Android TV (1080p)"
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -accel off
+          headless: true
+          emulator-options: -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
