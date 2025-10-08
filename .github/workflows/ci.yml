@@ -2,15 +2,15 @@ name: Flutter Plugin CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   platforms_tests:
-    name: Analyze & Platforms Unit Tests
+    name: Platforms Unit Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Get dependencies
         run: flutter pub get
@@ -26,7 +26,7 @@ jobs:
       - name: Run analyzer
         run: flutter analyze
 
-      - name: Run Native Unit Tests
+      - name: Run Platforms Unit Tests
         run: flutter test -r expanded test/entry_points/platforms_tests.dart
 
   web_tests:
@@ -40,10 +40,44 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Run analyzer
+        run: flutter analyze
+
       - name: Run Web Unit Tests
         run: flutter test -r expanded --platform chrome test/entry_points/web_tests.dart
+
+  # --- Android Tests ---
+  android_phone_test:
+    name: Android (Phone) Integration Test
+    needs: [platforms_tests]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - name: Get example app dependencies
+        run: cd example && flutter pub get
+      - name: Run on Phone Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          profile: "pixel_4"
+          script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
+
+  android_tv_test:
+    name: Android (TV) Integration Test
+    needs: [platforms_tests]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - name: Get example app dependencies
+        run: cd example && flutter pub get
+      - name: Run on TV Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          profile: "Android TV (1080p)"
+          script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
