@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi/src/platforms/windows/bindings.dart';
 
@@ -9,24 +10,22 @@ import 'package:is_tv_ffi/src/platforms/windows/bindings.dart';
 /// by inspecting environment variables.
 class IsTvWindows extends IsTv {
   /// Creates a new instance of [IsTvWindows].
-  ///
-  /// This constructor loads the `is_tv_ffi_plugin.dll` shared library
-  /// and initializes the FFI bindings. It is typically not called directly.
-  /// Instead, use [IsTv.instance] which will automatically create the
-  /// correct platform implementation.
-  IsTvWindows() {
-    _dynamicLibrary = DynamicLibrary.open('is_tv_ffi_plugin.dll');
+  IsTvWindows({@visibleForTesting IsTvFfiWindowsPlugin? plugin})
+    : _isTvFfiWindowsPlugin = plugin ?? _loadPlugin();
 
-    if (_dynamicLibrary != null) {
-      _isTvFfiWindowsPlugin = IsTvFfiWindowsPlugin(_dynamicLibrary!);
-    } else {
-      throw Exception('Unable to load is_tv_ffi_plugin.dll for $IsTvWindows');
+  final IsTvFfiWindowsPlugin _isTvFfiWindowsPlugin;
+
+  static IsTvFfiWindowsPlugin _loadPlugin() {
+    try {
+      final dynamicLibrary = DynamicLibrary.open('is_tv_ffi_plugin.dll');
+      return IsTvFfiWindowsPlugin(dynamicLibrary);
+    } catch (e) {
+      throw Exception(
+        'Unable to load is_tv_ffi_plugin.dll for $IsTvWindows: $e',
+      );
     }
   }
 
-  DynamicLibrary? _dynamicLibrary;
-  IsTvFfiWindowsPlugin? _isTvFfiWindowsPlugin;
-
   @override
-  bool get isTv => _isTvFfiWindowsPlugin!.is_tv();
+  bool get isTv => _isTvFfiWindowsPlugin.is_tv();
 }

@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi/src/platforms/ios/bindings.dart';
 
@@ -10,22 +11,20 @@ import 'package:is_tv_ffi/src/platforms/ios/bindings.dart';
 /// to determine if it's running on an Apple TV device.
 class IsTvIOS extends IsTv {
   /// Creates a new instance of [IsTvIOS].
-  ///
-  /// This constructor is typically not called directly. Instead, use [IsTv.instance]
-  /// which will automatically create the correct platform implementation.
-  IsTvIOS() {
-    _dynamicLibrary = DynamicLibrary.process();
+  IsTvIOS({@visibleForTesting IsTvFfiIOSPlugin? plugin})
+    : _isTvFfiIOSPlugin = plugin ?? _loadPlugin();
 
-    if (_dynamicLibrary != null) {
-      _isTvFfiIOSPlugin = IsTvFfiIOSPlugin(_dynamicLibrary!);
-    } else {
-      throw Exception('Unable to initialize $IsTvIOS');
+  final IsTvFfiIOSPlugin _isTvFfiIOSPlugin;
+
+  static IsTvFfiIOSPlugin _loadPlugin() {
+    try {
+      final dynamicLibrary = DynamicLibrary.process();
+      return IsTvFfiIOSPlugin(dynamicLibrary);
+    } catch (e) {
+      throw Exception('Unable to initialize $IsTvIOS: $e');
     }
   }
 
-  DynamicLibrary? _dynamicLibrary;
-  IsTvFfiIOSPlugin? _isTvFfiIOSPlugin;
-
   @override
-  bool get isTv => _isTvFfiIOSPlugin!.is_tv();
+  bool get isTv => _isTvFfiIOSPlugin.is_tv();
 }

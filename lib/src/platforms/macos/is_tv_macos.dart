@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi/src/platforms/macos/bindings.dart';
 
@@ -9,22 +10,20 @@ import 'package:is_tv_ffi/src/platforms/macos/bindings.dart';
 /// is running on an Apple TV.
 class IsTvMacOS extends IsTv {
   /// Creates a new instance of [IsTvMacOS].
-  ///
-  /// This constructor is typically not called directly. Instead, use [IsTv.instance]
-  /// which will automatically create the correct platform implementation.
-  IsTvMacOS() {
-    _dynamicLibrary = DynamicLibrary.process();
+  IsTvMacOS({@visibleForTesting IsTvFfiMacOSPlugin? plugin})
+    : _isTvFfiMacOSPlugin = plugin ?? _loadPlugin();
 
-    if (_dynamicLibrary != null) {
-      _isTvFfiIOSPlugin = IsTvFfiMacOSPlugin(_dynamicLibrary!);
-    } else {
-      throw Exception('Unable to initialize $IsTvMacOS');
+  final IsTvFfiMacOSPlugin _isTvFfiMacOSPlugin;
+
+  static IsTvFfiMacOSPlugin _loadPlugin() {
+    try {
+      final dynamicLibrary = DynamicLibrary.process();
+      return IsTvFfiMacOSPlugin(dynamicLibrary);
+    } catch (e) {
+      throw Exception('Unable to initialize $IsTvMacOS: $e');
     }
   }
 
-  DynamicLibrary? _dynamicLibrary;
-  IsTvFfiMacOSPlugin? _isTvFfiIOSPlugin;
-
   @override
-  bool get isTv => _isTvFfiIOSPlugin!.is_tv();
+  bool get isTv => _isTvFfiMacOSPlugin.is_tv();
 }
