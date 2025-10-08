@@ -39,6 +39,8 @@ class IsTvFfiWebPlugin {
       return true;
     }
 
-    return tvKeywords.any((keyword) => finalUserAgent.contains(keyword));
+    return tvKeywords.any(
+      (keyword) => finalUserAgent.contains(keyword.toLowerCase()),
+    );
   }
 }

@@ -19,7 +19,7 @@ void main() {
     IsTv.setInstance(null);
   });
 
-  group('IsTvFfi', () {
+  group(IsTvFfi, () {
     test('isTv should call the platform implementation and return true', () {
       when(() => mockIsTv.isTv).thenReturn(true);
 
