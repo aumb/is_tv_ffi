@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi/src/platforms/web/is_tv_web.dart';
@@ -14,9 +15,10 @@ class IsTvFfiWebPlugin {
   }
 
   /// Checks on the current user agent and returns true or false based on the contents of
-  /// the list
-  bool isTv() {
-    final userAgent = window.navigator.userAgent.toLowerCase();
+  /// the list.
+  bool isTv({@visibleForTesting String? userAgent}) {
+    final finalUserAgent =
+        userAgent ?? window.navigator.userAgent.toLowerCase();
 
     const tvKeywords = [
       'webos', // LG WebOS TVs
@@ -33,10 +35,10 @@ class IsTvFfiWebPlugin {
       'shield', // NVIDIA Shield
     ];
 
-    if (RegExp(r'\btv\b').hasMatch(userAgent)) {
+    if (RegExp(r'\btv\b').hasMatch(finalUserAgent)) {
       return true;
     }
 
-    return tvKeywords.any((keyword) => userAgent.contains(keyword));
+    return tvKeywords.any((keyword) => finalUserAgent.contains(keyword));
   }
 }

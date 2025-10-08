@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi/src/platforms/linux/bindings.dart';
 
@@ -11,24 +12,22 @@ import 'package:is_tv_ffi/src/platforms/linux/bindings.dart';
 /// Steam Big Picture Mode session.
 class IsTvLinux extends IsTv {
   /// Creates a new instance of [IsTvLinux].
-  ///
-  /// This constructor loads the `libis_tv_ffi_plugin.so` shared library
-  /// and initializes the FFI bindings. It is typically not called directly.
-  /// Instead, use [IsTv.instance] which will automatically create the
-  /// correct platform implementation.
-  IsTvLinux() {
-    _dynamicLibrary = DynamicLibrary.open('libis_tv_ffi_plugin.so');
+  IsTvLinux({@visibleForTesting IsTvFfiLinuxPlugin? plugin})
+    : _isTvFfiLinuxPlugin = plugin ?? _loadPlugin();
 
-    if (_dynamicLibrary != null) {
-      _isTvFfiLinuxPlugin = IsTvFfiLinuxPlugin(_dynamicLibrary!);
-    } else {
-      throw Exception('Unable to load libis_tv_ffi_plugin.so for $IsTvLinux');
+  final IsTvFfiLinuxPlugin _isTvFfiLinuxPlugin;
+
+  static IsTvFfiLinuxPlugin _loadPlugin() {
+    try {
+      final dynamicLibrary = DynamicLibrary.open('libis_tv_ffi_plugin.so');
+      return IsTvFfiLinuxPlugin(dynamicLibrary);
+    } catch (e) {
+      throw Exception(
+        'Unable to load libis_tv_ffi_plugin.so for $IsTvLinux: $e',
+      );
     }
   }
 
-  DynamicLibrary? _dynamicLibrary;
-  IsTvFfiLinuxPlugin? _isTvFfiLinuxPlugin;
-
   @override
-  bool get isTv => _isTvFfiLinuxPlugin!.is_tv();
+  bool get isTv => _isTvFfiLinuxPlugin.is_tv();
 }
