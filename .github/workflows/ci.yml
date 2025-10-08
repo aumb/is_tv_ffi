@@ -64,6 +64,7 @@ jobs:
       - name: Run on Phone Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
+          api-level: 33
           profile: "pixel_4"
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
 
@@ -79,5 +80,6 @@ jobs:
       - name: Run on TV Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
+          api-level: 33
           profile: "Android TV (1080p)"
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
