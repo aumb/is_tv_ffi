@@ -8,7 +8,7 @@ on:
 
 jobs:
   platforms_tests:
-    name: Analyze & Platforms Unit Tests
+    name: Platforms Unit Tests
     runs-on: ubuntu-latest
     
     steps:
@@ -26,7 +26,7 @@ jobs:
       - name: Run analyzer
         run: flutter analyze
 
-      - name: Run Native Unit Tests
+      - name: Run Platforms Unit Tests
         run: flutter test -r expanded test/entry_points/platforms_tests.dart
 
   web_tests:
@@ -44,6 +44,9 @@ jobs:
 
       - name: Get dependencies
         run: flutter pub get
+
+      - name: Run analyzer
+        run: flutter analyze
 
       - name: Run Web Unit Tests
         run: flutter test -r expanded --platform chrome test/entry_points/web_tests.dart
