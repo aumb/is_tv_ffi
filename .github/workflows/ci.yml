@@ -65,6 +65,8 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
+          target: google_apis
+          arch: x86_64
           profile: "pixel_4"
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
 
@@ -81,5 +83,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
+          target: google_apis
+          arch: x86_64
           profile: "Android TV (1080p)"
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
