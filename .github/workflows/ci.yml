@@ -67,29 +67,36 @@ jobs:
         id: avd-cache
         with:
           path: |
-            ~/.android/avd/*
+            ~/.android/avd/*.avd
+            ~/.android/avd/*.ini
             ~/.android/adb*
-          key: avd-33
+          key: avd-33-${{ runner.os }}-${{ runner.arch }}
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_4
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
+
       - name: Get example app dependencies
         run: cd example && flutter pub get
+
       - name: Run on Phone Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
+          target: google_apis
           arch: x86_64
-          profile: "pixel_4"
+          profile: pixel_4
           emulator-boot-timeout: 1200
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
 
   android_tv_test:
