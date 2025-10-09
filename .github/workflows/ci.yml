@@ -75,8 +75,6 @@ jobs:
           arch: x86_64
           profile: "pixel_4"
           emulator-boot-timeout: 1200
-          enable-snapshot-load: true
-          enable-snapshot-save: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
 
@@ -93,9 +91,8 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
-          target: google_apis
-          arch: arm64-v8a
-          profile: "Android TV (1080p)"
-          headless: true
-          emulator-options: -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          arch: x86_64
+          profile: "Television (720p)"
+          emulator-boot-timeout: 1200
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
