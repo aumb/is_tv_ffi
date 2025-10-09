@@ -67,6 +67,7 @@ jobs:
           api-level: 33
           arch: x86_64
           profile: "pixel_4"
+          emulator-boot-timeout: 1200
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
           script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
 
