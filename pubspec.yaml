@@ -17,6 +17,8 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   jni: ^0.14.2
   mocktail: ^1.0.4
   web: ^1.1.1

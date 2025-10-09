@@ -2,15 +2,15 @@ name: Flutter Plugin CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   platforms_tests:
-    name: Analyze & Platforms Unit Tests
+    name: Platforms Unit Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,7 +18,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Get dependencies
         run: flutter pub get
@@ -26,7 +26,7 @@ jobs:
       - name: Run analyzer
         run: flutter analyze
 
-      - name: Run Native Unit Tests
+      - name: Run Platforms Unit Tests
         run: flutter test -r expanded test/entry_points/platforms_tests.dart
 
   web_tests:
@@ -40,10 +40,85 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
 
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Run analyzer
+        run: flutter analyze
+
       - name: Run Web Unit Tests
         run: flutter test -r expanded --platform chrome test/entry_points/web_tests.dart
+
+  # --- Android Tests ---
+  android_phone_test:
+    name: Android (Phone) Integration Test
+    needs: [platforms_tests]
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*.avd
+            ~/.android/avd/*.ini
+            ~/.android/adb*
+          key: avd-33-${{ runner.os }}-${{ runner.arch }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_4
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: |
+            adb wait-for-device
+            adb shell settings put global window_animation_scale 0
+            adb shell settings put global transition_animation_scale 0
+            adb shell settings put global animator_duration_scale 0
+            echo "Generated AVD snapshot for caching."
+
+      - name: Get example app dependencies
+        run: cd example && flutter pub get
+
+      - name: Run on Phone Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          profile: pixel_4
+          emulator-boot-timeout: 1200
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
+
+  android_tv_test:
+    name: Android (TV) Integration Test
+    needs: [platforms_tests]
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+      - name: Get example app dependencies
+        run: cd example && flutter pub get
+      - name: Run on TV Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          arch: x86_64
+          profile: "Television (720p)"
+          emulator-boot-timeout: 1200
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
