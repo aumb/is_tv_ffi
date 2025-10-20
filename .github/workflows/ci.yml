@@ -120,7 +120,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: cd example && flutter test --dart-define=EXPECTED_IS_TV=false integration_test
+          script: cd example && flutter test -d emulator-5554 --dart-define=EXPECTED_IS_TV=false integration_test
   android_tv_integration_tests:
     name: Android TV Integration Tests
     runs-on: ubuntu-latest
@@ -191,4 +191,4 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           disable-animations: true
-          script: cd example && flutter test --dart-define=EXPECTED_IS_TV=true integration_test
+          script: cd example && flutter test -d emulator-5554 --dart-define=EXPECTED_IS_TV=true integration_test
