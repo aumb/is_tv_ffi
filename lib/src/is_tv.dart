@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:is_tv_ffi/src/platforms/paltform_locator.dart';
+import 'package:is_tv_ffi/src/platforms/platform_locator.dart';
 
 /// Base class for platform-specific TV detection implementations.
 ///

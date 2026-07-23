@@ -16,15 +16,5 @@ bool is_tv() {
     }
   }
 
-  // 2. Heuristic Check: Apps running on Xbox often run under the "System"
-  //    user account in certain configurations. This is a good hint.
-  if (_dupenv_s(&env_value, &len, "USERNAME") == 0 && env_value != nullptr) {
-    bool is_system_user = (strcmp(env_value, "SYSTEM") == 0);
-    free(env_value);
-    if (is_system_user) {
-      return true;
-    }
-  }
-
   return false;
 }
