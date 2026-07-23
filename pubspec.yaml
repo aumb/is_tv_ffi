@@ -19,13 +19,13 @@ dependencies:
     sdk: flutter
   jni: ^1.0.0
   jni_flutter: ^1.0.1
-  mocktail: ^1.0.5
   web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  mocktail: ^1.0.5
   jnigen: ^0.16.0
   ffigen: ^20.1.1
 

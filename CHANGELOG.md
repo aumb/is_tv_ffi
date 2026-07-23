@@ -4,6 +4,8 @@
 
 - Upgraded dependencies: `jni` to ^1.0.0, `mocktail` to ^1.0.5, `flutter_lints` to ^6.0.0, `jnigen` to ^0.16.0, and `ffigen` to ^20.1.1
 - Added `jni_flutter` ^1.0.1 dependency; the Android application-context API moved there in `jni` 1.0.0
+- Moved `mocktail` to `dev_dependencies` (it was incorrectly declared as a runtime dependency)
+- Raised the plugin's Android build toolchain to Gradle 8.14, Android Gradle Plugin 8.11.1, and Kotlin 2.2.20; building for Android now requires Gradle 8.13 or newer
 - **Breaking:** Raised minimum Flutter to >=3.35.6 (required by `jni` 1.0.0)
 
 ## 0.6.0

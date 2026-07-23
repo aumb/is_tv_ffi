@@ -1,3 +1,6 @@
+@TestOn('browser')
+library;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:is_tv_ffi/src/platforms/web/bindings.dart';
 import 'package:is_tv_ffi/src/platforms/web/is_tv_web.dart';
