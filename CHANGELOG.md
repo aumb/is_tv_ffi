@@ -1,3 +1,11 @@
+## 0.7.0
+
+### Changes
+
+- Upgraded dependencies: `jni` to ^1.0.0, `mocktail` to ^1.0.5, `flutter_lints` to ^6.0.0, `jnigen` to ^0.16.0, and `ffigen` to ^20.1.1
+- Added `jni_flutter` ^1.0.1 dependency; the Android application-context API moved there in `jni` 1.0.0
+- **Breaking:** Raised minimum Flutter to >=3.35.6 (required by `jni` 1.0.0)
+
 ## 0.6.0
 
 ### Changes

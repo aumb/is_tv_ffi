@@ -17,8 +17,7 @@ internal class IsTvFfiPluginTest {
     Mockito.`when`(mockContext.getSystemService(Context.UI_MODE_SERVICE)).thenReturn(mockUiModeManager)
     Mockito.`when`(mockUiModeManager.currentModeType).thenReturn(Configuration.UI_MODE_TYPE_TELEVISION)
 
-    val plugin = IsTvFfiPlugin(mockContext)
-    val result = plugin.isTv()
+    val result = IsTvFfiPlugin.isTv(mockContext)
 
     assertEquals(true, result)
   }
@@ -31,8 +30,7 @@ internal class IsTvFfiPluginTest {
     Mockito.`when`(mockContext.getSystemService(Context.UI_MODE_SERVICE)).thenReturn(mockUiModeManager)
     Mockito.`when`(mockUiModeManager.currentModeType).thenReturn(Configuration.UI_MODE_TYPE_NORMAL) // Simulate a phone
 
-    val plugin = IsTvFfiPlugin(mockContext)
-    val result = plugin.isTv()
+    val result = IsTvFfiPlugin.isTv(mockContext)
 
     assertEquals(false, result)
   }

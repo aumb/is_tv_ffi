@@ -10,7 +10,6 @@ linter:
     - avoid_empty_else
     - avoid_print
     - avoid_relative_lib_imports
-    - avoid_returning_null_for_future
     - avoid_type_to_string
     - avoid_types_as_parameter_names
     - cancel_subscriptions
@@ -38,7 +37,6 @@ linter:
     - unawaited_futures
 
     # Doc comments
-    - package_api_docs
     - public_member_api_docs
 
 analyzer:

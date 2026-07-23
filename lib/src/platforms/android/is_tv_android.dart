@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi/src/platforms/android/bindings.dart';
 import 'package:jni/jni.dart';
+import 'package:jni_flutter/jni_flutter.dart';
 
 @visibleForTesting
 /// Function type for checking if the device is a TV given a [Context].
@@ -18,7 +19,8 @@ class IsTvAndroid extends IsTv {
     @visibleForTesting Context? context,
     @visibleForTesting IsTvCheck? isTvCheck,
   }) : _context =
-           context ?? Context.fromReference(Jni.getCachedApplicationContext()),
+           context ??
+           androidApplicationContext.as(Context.type, releaseOriginal: true),
        _isTvCheck = isTvCheck ?? IsTvFfiPlugin.isTv;
 
   final Context _context;
