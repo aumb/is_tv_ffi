@@ -13,7 +13,6 @@ set(PLUGIN_NAME "is_tv_ffi_plugin")
 
 # Any new source files that you add to the plugin should be added here.
 list(APPEND PLUGIN_SOURCES
-  "is_tv_ffi_plugin.cc"
   "is_tv_linux.cc"
 )
 

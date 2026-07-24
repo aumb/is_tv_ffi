@@ -6,6 +6,7 @@
 - Added `jni_flutter` ^1.0.1 dependency; the Android application-context API moved there in `jni` 1.0.0
 - Moved `mocktail` to `dev_dependencies` (it was incorrectly declared as a runtime dependency)
 - Windows: removed the unreliable `USERNAME == "SYSTEM"` heuristic; TV detection on Windows now relies solely on the `FLUTTER_IS_TV` environment variable
+- Web: detect Samsung/LG smart-TV platform globals (`tizen`, `webOS`, `webOSSystem`) in addition to the user agent, and broadened the TV user-agent keyword list (HbbTV, Bravia, VIDAA, Roku, Net TV, CE-HTML, Opera TV)
 - Raised the plugin's Android build toolchain to Gradle 8.14, Android Gradle Plugin 8.11.1, and Kotlin 2.2.20; building for Android now requires Gradle 8.13 or newer
 - **Breaking:** Raised minimum Flutter to >=3.35.6 (required by `jni` 1.0.0)
 

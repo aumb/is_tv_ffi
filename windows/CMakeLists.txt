@@ -18,8 +18,6 @@ set(PLUGIN_NAME "is_tv_ffi_plugin")
 
 # Any new source files that you add to the plugin should be added here.
 list(APPEND PLUGIN_SOURCES
-  "is_tv_ffi_plugin.cpp"
-  "is_tv_ffi_plugin.h"
   "is_tv_windows.cpp"
   "is_tv_windows.h"
 )
@@ -27,8 +25,6 @@ list(APPEND PLUGIN_SOURCES
 # Define the plugin library target. Its name must not be changed (see comment
 # on PLUGIN_NAME above).
 add_library(${PLUGIN_NAME} SHARED
-  # "include/is_tv_ffi/is_tv_ffi_plugin_c_api.h"
-  # "is_tv_ffi_plugin_c_api.cpp"
   ${PLUGIN_SOURCES}
 )
 

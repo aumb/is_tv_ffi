@@ -30,9 +30,3 @@ class IsTvFfiWindowsPlugin {
   );
   late final _is_tv = _is_tvPtr.asFunction<bool Function()>();
 }
-
-const int __bool_true_false_are_defined = 1;
-
-const int true$ = 1;
-
-const int false$ = 0;

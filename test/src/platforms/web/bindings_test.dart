@@ -53,6 +53,18 @@ void main() {
       expect(plugin.isTv(userAgent: userAgent), isTrue);
     });
 
+    test('returns true for a Sony Bravia user agent', () {
+      const userAgent = 'Mozilla/5.0 (Linux; SmartTV; BRAVIA 4K GB) '
+          'AppleWebKit/537.36';
+      expect(plugin.isTv(userAgent: userAgent.toLowerCase()), isTrue);
+    });
+
+    test('returns true for an HbbTV user agent', () {
+      const userAgent = 'Mozilla/5.0 (Web0S; Linux/SmartTV) '
+          'AppleWebKit/537.36 HbbTV/1.4.1';
+      expect(plugin.isTv(userAgent: userAgent.toLowerCase()), isTrue);
+    });
+
     test('returns false for a standard Chrome desktop user agent', () {
       const userAgent =
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36';

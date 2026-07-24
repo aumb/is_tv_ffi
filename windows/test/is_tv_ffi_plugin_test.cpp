@@ -9,7 +9,6 @@ namespace test {
 // A helper function to clean up environment variables after tests.
 void clear_test_variables() {
   _putenv_s("FLUTTER_IS_TV", "");
-  _putenv_s("USERNAME", "");
 }
 
 // Test case for the default scenario where no TV-related variables are set.
@@ -22,14 +21,6 @@ TEST(IsTvWindows, IsTvReturnsFalseByDefault) {
 TEST(IsTvWindows, IsTvReturnsTrueWhenFlutterIsTvSet) {
   // Set the environment variable to simulate a TV environment.
   _putenv_s("FLUTTER_IS_TV", "1");
-  ASSERT_TRUE(is_tv());
-  clear_test_variables(); // Clean up
-}
-
-// Test case for when the USERNAME suggests an Xbox environment.
-TEST(IsTvWindows, IsTvReturnsTrueWhenUsernameIsSystem) {
-  // Set the environment variable to simulate an Xbox user.
-  _putenv_s("USERNAME", "SYSTEM");
   ASSERT_TRUE(is_tv());
   clear_test_variables(); // Clean up
 }
