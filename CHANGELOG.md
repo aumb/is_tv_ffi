@@ -5,6 +5,8 @@
 - **Android: migrated to built-in Kotlin.** The plugin no longer applies the Kotlin Gradle Plugin; Flutter supplies Kotlin itself. Apps using this plugin no longer get the warning that "Future versions of Flutter will fail to build if your app uses plugins that apply KGP"
 - Updated the minimum supported SDK version to Flutter 3.44 / Dart 3.12
 - Dropped the unused `kotlin-test` dependency, which relied on the Kotlin Gradle Plugin to supply its version
+- CI: bumped the GitHub Actions off Node 20, which is deprecated on GitHub runners — `checkout` to v7, `setup-java` to v5, `setup-android` to v4 and `setup-gradle` to v5
+- Linux/Windows: bumped the googletest used by the native unit tests from 1.11.0 to 1.15.2. 1.11.0 declares `cmake_minimum_required(VERSION 2.8.12)`, and CMake 4 removed compatibility with anything below 3.5, so configuring the example failed on runners that ship CMake 4. This affects the plugin's own test build only — the googletest dependency is behind `include_is_tv_ffi_tests`, which is set by the example app and not by consuming apps
 
 Note for contributors: because Flutter now supplies Kotlin, `android/` is no longer buildable on its own. Run the Android unit tests through the example app instead:
 

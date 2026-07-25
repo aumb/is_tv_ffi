@@ -66,7 +66,10 @@ enable_testing()
 include(FetchContent)
 FetchContent_Declare(
   googletest
-  URL https://github.com/google/googletest/archive/release-1.11.0.zip
+  # Must stay at a release whose cmake_minimum_required is >= 3.5;
+  # CMake 4 removed compatibility with anything older, and googletest
+  # 1.11 declares 2.8.12.
+  URL https://github.com/google/googletest/archive/refs/tags/v1.15.2.zip
 )
 # Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
