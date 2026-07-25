@@ -100,22 +100,22 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
 
+      # Also writes example/android/local.properties, which
+      # settings.gradle.kts reads flutter.sdk from.
       - name: Get example dependencies
         run: flutter pub get
         working-directory: example
 
-      # example/android/settings.gradle.kts reads flutter.sdk from
-      # local.properties, which is generated locally and not checked in.
-      - name: Point Gradle at the Flutter SDK
-        run: echo "flutter.sdk=${FLUTTER_ROOT:-$(dirname "$(dirname "$(which flutter)")")}" >> local.properties
-        working-directory: example/android
-
-      # The plugin no longer applies the Kotlin Gradle Plugin, so its Gradle
-      # project cannot be built on its own: Flutter supplies Kotlin, which means
-      # the tests have to run through the example app.
+      # Two things are going on here:
+      #  - The plugin no longer applies the Kotlin Gradle Plugin, so its Gradle
+      #    project cannot be built on its own; Flutter supplies Kotlin, which
+      #    means the tests have to run against the example app.
+      #  - example/android/gradlew is gitignored by the Flutter app template and
+      #    only exists once Flutter has generated it, so it is absent on a fresh
+      #    checkout. The plugin's own wrapper is committed and pins the same
+      #    Gradle version, so drive the example project with it via -p.
       - name: Run Kotlin unit tests
-        run: ./gradlew :is_tv_ffi:test
-        working-directory: example/android
+        run: ./android/gradlew -p example/android :is_tv_ffi:test
 
   linux_native_tests:
     name: Linux Native Unit Tests
