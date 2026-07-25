@@ -18,11 +18,7 @@ typedef LibraryResolver = DynamicLibrary Function();
 /// instance never touches the native world.
 class IsTvNative extends IsTv {
   /// Creates an instance that resolves its library with [resolveLibrary].
-  IsTvNative({
-    required LibraryResolver resolveLibrary,
-    @visibleForTesting IsTvFfiNativePlugin? plugin,
-  }) : _resolveLibrary = resolveLibrary,
-       _plugin = plugin;
+  IsTvNative({required this._resolveLibrary, @visibleForTesting this._plugin});
 
   /// Looks `is_tv` up in the running process.
   ///

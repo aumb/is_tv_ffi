@@ -3,7 +3,7 @@ description: >-
   Detects whether a Flutter app is running on a TV: Android TV, tvOS, webOS,
   Tizen and TV-mode Linux and Windows, using FFI and JNI rather than platform
   channels.
-version: 0.7.0
+version: 0.7.1
 homepage: https://github.com/aumb/is_tv_ffi
 repository: https://github.com/aumb/is_tv_ffi
 issue_tracker: https://github.com/aumb/is_tv_ffi/issues
@@ -15,7 +15,7 @@ topics:
   - smart-tv
 
 environment:
-  sdk: ^3.8.1
+  sdk: ^3.12.0
   flutter: ">=3.44.0"
 
 dependencies:

@@ -14,7 +14,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-    is_tv_ffi: ^0.7.0
+    is_tv_ffi: ^0.7.1
 ```
 
 ## Usage

@@ -87,12 +87,31 @@ jobs:
         with:
           packages: "platforms;android-36"
 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Get example dependencies
+        run: flutter pub get
+        working-directory: example
+
+      # example/android/settings.gradle.kts reads flutter.sdk from
+      # local.properties, which is generated locally and not checked in.
+      - name: Point Gradle at the Flutter SDK
+        run: echo "flutter.sdk=${FLUTTER_ROOT:-$(dirname "$(dirname "$(which flutter)")")}" >> local.properties
+        working-directory: example/android
+
+      # The plugin no longer applies the Kotlin Gradle Plugin, so its Gradle
+      # project cannot be built on its own: Flutter supplies Kotlin, which means
+      # the tests have to run through the example app.
       - name: Run Kotlin unit tests
-        run: ./gradlew test
-        working-directory: android
+        run: ./gradlew :is_tv_ffi:test
+        working-directory: example/android
 
   linux_native_tests:
     name: Linux Native Unit Tests

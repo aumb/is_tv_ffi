@@ -1,3 +1,17 @@
+## 0.7.1
+
+### Changes
+
+- **Android: migrated to built-in Kotlin.** The plugin no longer applies the Kotlin Gradle Plugin; Flutter supplies Kotlin itself. Apps using this plugin no longer get the warning that "Future versions of Flutter will fail to build if your app uses plugins that apply KGP"
+- Updated the minimum supported SDK version to Flutter 3.44 / Dart 3.12
+- Dropped the unused `kotlin-test` dependency, which relied on the Kotlin Gradle Plugin to supply its version
+
+Note for contributors: because Flutter now supplies Kotlin, `android/` is no longer buildable on its own. Run the Android unit tests through the example app instead:
+
+```sh
+cd example/android && ./gradlew :is_tv_ffi:test
+```
+
 ## 0.7.0
 
 ### Fixes
