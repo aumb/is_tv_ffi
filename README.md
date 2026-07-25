@@ -33,6 +33,31 @@ if (isTv) {
 
 `isTv` is a synchronous native call, so there is nothing to await.
 
+### iOS and macOS: Swift Package Manager only
+
+The iOS and macOS implementations ship as Swift packages (`ios/is_tv_ffi/`, `macos/is_tv_ffi/`) with no podspec, so they require **Flutter 3.44 or newer**, where Swift Package Manager is enabled by default.
+
+If Swift Package Manager is disabled, your build stops with:
+
+```
+The following plugin(s) are only compatible with Swift Package Manager:
+  - is_tv_ffi
+```
+
+To fix it, re-enable Swift Package Manager:
+
+```bash
+flutter config --enable-swift-package-manager
+```
+
+Make sure it is not disabled per-project either — check for this in your app's `pubspec.yaml` and remove it if present:
+
+```yaml
+flutter:
+  config:
+    enable-swift-package-manager: false
+```
+
 ## Desktop Usage
 
 For Linux and Windows, the plugin determines if it's a TV environment by checking for specific environment variables. This allows you to force "TV Mode" for your application when running on a media center PC, or for testing.

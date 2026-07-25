@@ -10,6 +10,7 @@
 
 ### Changes
 
+- **Breaking: iOS and macOS moved to Swift Package Manager and no longer ship a podspec.** Flutter warned that the plugin did not support SPM and that this "will become an error in a future version of Flutter". The Swift sources now live in `<platform>/is_tv_ffi/Sources/is_tv_ffi/` alongside a `Package.swift`. Apps must be on Flutter 3.44 or newer with Swift Package Manager enabled — it is on by default there. Apps that have disabled SPM, globally or via `enable-swift-package-manager: false` in their `pubspec.yaml`, must re-enable it
 - Upgraded dependencies: `jni` to ^1.0.0, `mocktail` to ^1.0.5, `flutter_lints` to ^6.0.0, `jnigen` to ^0.16.0, and `ffigen` to ^20.1.1
 - Added `jni_flutter` ^1.0.1 dependency; the Android application-context API moved there in `jni` 1.0.0
 - Moved `mocktail` to `dev_dependencies` (it was incorrectly declared as a runtime dependency)
@@ -20,8 +21,9 @@
 - `IsTvFfi` now has a `const` constructor
 - Raised the plugin's Android build toolchain to Gradle 8.14, Android Gradle Plugin 8.11.1, and Kotlin 2.2.20; building for Android now requires Gradle 8.13 or newer
 - Raised `compileSdk` to 36, moved the `dependencies` block out of `android { }`, replaced the deprecated `kotlinOptions` with `kotlin { compilerOptions }`, and dropped the deprecated `package` attribute from the library manifest
-- Raised the podspec deployment targets to iOS 13.0 and macOS 10.15, and replaced the placeholder podspec metadata (`A new Flutter plugin project.`, `http://example.com`, `Your Company`) with real values
-- **Breaking:** Raised minimum Flutter to >=3.35.6 (required by `jni` 1.0.0)
+- Raised the Apple deployment targets to iOS 13.0 and macOS 10.15
+- The example app no longer uses CocoaPods at all: its `Podfile`s are deleted and the Pods references are removed from both Xcode projects
+- **Breaking:** Raised minimum Flutter to >=3.44.0, for Swift Package Manager (previously >=3.35.6, required by `jni` 1.0.0)
 
 ### Internal
 
