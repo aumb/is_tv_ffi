@@ -1,6 +1,6 @@
 PODS:
   - FlutterMacOS (1.0.0)
-  - is_tv_ffi (0.0.1):
+  - is_tv_ffi (0.7.0):
     - FlutterMacOS
 
 DEPENDENCIES:
@@ -15,8 +15,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
-  is_tv_ffi: 339504aeecf3d2634b83a86506e8f613a2be9843
+  is_tv_ffi: bef8d84dc7158e84178823d398cd9bed7dfe5878
 
 PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009
 
-COCOAPODS: 1.15.0
+COCOAPODS: 1.17.0

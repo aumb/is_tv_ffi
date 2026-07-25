@@ -17,8 +17,17 @@ class IsTvFfiWebPlugin {
     IsTv.setInstance(IsTvWeb());
   }
 
-  /// Matches the standalone word "tv" in a user agent string.
-  static final RegExp _tvWordPattern = RegExp(r'\btv\b');
+  /// Patterns that indicate a TV platform.
+  ///
+  /// These are anchored on purpose: matched as bare substrings they produce
+  /// false positives on ordinary user agents.
+  static final List<RegExp> _tvPatterns = [
+    // The standalone word "tv", as in "Apple TV" or "SHIELD Android TV".
+    RegExp(r'\btv\b'),
+    // Amazon Fire TV device models: AFTB, AFTS, AFTMM and friends. A bare
+    // "aft" would also match words such as "raft" or "craft".
+    RegExp(r'\baft[a-z]{1,3}\b'),
+  ];
 
   /// Lowercase keywords that indicate a TV platform.
   static const List<String> _tvKeywords = [
@@ -29,11 +38,10 @@ class IsTvFfiWebPlugin {
     'smart-tv', // Generic smart TV token
     'appletv', // Apple TV
     'crkey', // Google Chromecast
-    'aft', // Amazon Fire TV (e.g. 'aftb', 'aftt')
     'viera', // Panasonic Viera Cast
     'netcast', // LG NetCast TVs
     'dtv', // Digital TV
-    'shield', // NVIDIA Shield
+    'shield android tv', // NVIDIA Shield TV; the Shield Tablet is not a TV
     'hbbtv', // HbbTV (hybrid broadcast broadband TV)
     'bravia', // Sony Bravia TVs
     'vidaa', // Hisense VIDAA OS
@@ -54,23 +62,22 @@ class IsTvFfiWebPlugin {
 
   /// Returns true if the current device is a TV.
   ///
-  /// At runtime this first checks for smart-TV platform globals on `window`,
-  /// then falls back to inspecting the user agent. Pass [userAgent] to exercise
-  /// the user-agent logic in isolation (the global check is skipped in that
-  /// case so tests stay deterministic).
-  bool isTv({@visibleForTesting String? userAgent}) {
-    if (userAgent == null && _hasTvPlatformGlobal()) {
-      return true;
-    }
+  /// Checks for smart-TV platform globals on `window` first, then falls back to
+  /// inspecting the browser's user agent.
+  bool isTv() =>
+      _hasTvPlatformGlobal() || matchesTvUserAgent(window.navigator.userAgent);
 
-    final finalUserAgent =
-        userAgent ?? window.navigator.userAgent.toLowerCase();
+  /// Whether [userAgent] looks like it belongs to a TV.
+  ///
+  /// Exposed separately so the matching rules can be exercised without a
+  /// browser; callers should use [isTv], which also checks for platform
+  /// globals. [userAgent] is matched case-insensitively.
+  @visibleForTesting
+  static bool matchesTvUserAgent(String userAgent) {
+    final normalized = userAgent.toLowerCase();
 
-    if (_tvWordPattern.hasMatch(finalUserAgent)) {
-      return true;
-    }
-
-    return _tvKeywords.any(finalUserAgent.contains);
+    return _tvPatterns.any((pattern) => pattern.hasMatch(normalized)) ||
+        _tvKeywords.any(normalized.contains);
   }
 
   /// Whether any known smart-TV platform global is present on `window`.

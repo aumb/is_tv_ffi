@@ -1,0 +1,46 @@
+# Files excluded from the published package.
+#
+# Note: because this file exists, pub ignores the root .gitignore when
+# publishing, so everything .gitignore excludes has to be repeated here.
+
+# --- Development-only inputs, not needed by consumers ---
+# The leading slash matters: a bare `src/` would also match `lib/src` and
+# `android/src`, which must ship.
+ffigen.yaml
+jnigen.yaml
+/src/
+.github/
+.vscode/
+.metadata
+
+# The plugin is built by the consuming app's Gradle, never by its own wrapper.
+android/gradlew
+android/gradlew.bat
+android/gradle/
+android/local.properties
+
+# --- Mirrors of the root .gitignore ---
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+*.iml
+*.ipr
+*.iws
+.idea/
+
+pubspec.lock
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/

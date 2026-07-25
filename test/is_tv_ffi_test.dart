@@ -11,7 +11,7 @@ void main() {
 
   setUp(() {
     mockIsTv = _MockIsTv();
-    isTvFfi = IsTvFfi();
+    isTvFfi = const IsTvFfi();
     IsTv.setInstance(mockIsTv);
   });
 

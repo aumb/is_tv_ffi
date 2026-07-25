@@ -7,35 +7,87 @@ import 'package:mocktail/mocktail.dart';
 class _MockJObject extends Mock implements JObject {}
 
 void main() {
-  late IsTvAndroid isTvAndroid;
-  late _MockJObject mockJObject;
-  late Context mockContext;
+  late List<_MockJObject> acquired;
+
+  // `Context` is an extension type over `JObject`, so its representation is
+  // erased at runtime and a mocked `JObject` stands in for one. This is the
+  // only place that relies on that, so it is the only place to fix should
+  // jnigen ever change how `Context` is represented.
+  Context provideContext() {
+    final jObject = _MockJObject();
+    when(() => jObject.release()).thenReturn(null);
+    acquired.add(jObject);
+    return jObject as Context;
+  }
 
   setUp(() {
-    mockJObject = _MockJObject();
-    when(() => mockJObject.release()).thenReturn(null);
-    mockContext = mockJObject as Context;
+    acquired = <_MockJObject>[];
   });
 
   group(IsTvAndroid, () {
     test('isTv returns true when native check is true', () {
-      bool mockIsTvCheck(Context _) => true;
-      isTvAndroid = IsTvAndroid(context: mockContext, isTvCheck: mockIsTvCheck);
+      final isTvAndroid = IsTvAndroid(
+        contextProvider: provideContext,
+        isTvCheck: (_) => true,
+      );
 
-      final result = isTvAndroid.isTv;
-
-      expect(result, isTrue);
-      verify(() => mockJObject.release()).called(1);
+      expect(isTvAndroid.isTv, isTrue);
+      expect(acquired, hasLength(1));
+      verify(() => acquired.single.release()).called(1);
     });
 
     test('isTv returns false when native check is false', () {
-      bool mockIsTvCheck(Context _) => false;
-      isTvAndroid = IsTvAndroid(context: mockContext, isTvCheck: mockIsTvCheck);
+      final isTvAndroid = IsTvAndroid(
+        contextProvider: provideContext,
+        isTvCheck: (_) => false,
+      );
 
-      final result = isTvAndroid.isTv;
+      expect(isTvAndroid.isTv, isFalse);
+      expect(acquired, hasLength(1));
+      verify(() => acquired.single.release()).called(1);
+    });
 
-      expect(result, isFalse);
-      verify(() => mockJObject.release()).called(1);
+    test('isTv can be read more than once', () {
+      // Regression test: caching a single context and releasing it with `use`
+      // made every read after the first throw a UseAfterReleaseError.
+      final isTvAndroid = IsTvAndroid(
+        contextProvider: provideContext,
+        isTvCheck: (_) => true,
+      );
+
+      expect(isTvAndroid.isTv, isTrue);
+      expect(isTvAndroid.isTv, isTrue);
+      expect(isTvAndroid.isTv, isTrue);
+
+      expect(acquired, hasLength(3));
+      for (final jObject in acquired) {
+        verify(() => jObject.release()).called(1);
+      }
+    });
+
+    test('releases the context even when the native check throws', () {
+      final isTvAndroid = IsTvAndroid(
+        contextProvider: provideContext,
+        isTvCheck: (_) => throw StateError('boom'),
+      );
+
+      expect(() => isTvAndroid.isTv, throwsStateError);
+      expect(acquired, hasLength(1));
+      verify(() => acquired.single.release()).called(1);
+    });
+
+    test('does not touch JNI until isTv is read', () {
+      var provided = 0;
+
+      IsTvAndroid(
+        contextProvider: () {
+          provided++;
+          return provideContext();
+        },
+        isTvCheck: (_) => true,
+      );
+
+      expect(provided, isZero);
     });
   });
 }

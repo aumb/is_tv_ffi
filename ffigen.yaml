@@ -1,0 +1,18 @@
+name: IsTvFfiNativePlugin
+description: Bindings for the native isTv check shared by iOS, macOS, Linux and Windows.
+output: "lib/src/platforms/native/bindings.dart"
+headers:
+  entry-points:
+    - "src/is_tv.h"
+  include-directives:
+    - "src/is_tv.h"
+# stdbool.h would otherwise emit junk constants
+# (__bool_true_false_are_defined, true, false). We bind no macros.
+macros:
+  exclude:
+    - ".*"
+preamble: |
+  // ignore_for_file: camel_case_types, non_constant_identifier_names, unused_element, unused_field
+comments:
+  style: any
+  length: full

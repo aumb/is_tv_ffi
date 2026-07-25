@@ -1,3 +1,6 @@
+#ifndef IS_TV_WINDOWS_H_
+#define IS_TV_WINDOWS_H_
+
 #include <stdbool.h>
 
 #ifdef _WIN32
@@ -14,8 +17,10 @@ extern "C" {
 #endif
 
 // Now our function is declared with the macro.
-FFI_PLUGIN_EXPORT bool is_tv();
+FFI_PLUGIN_EXPORT bool is_tv(void);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif  // IS_TV_WINDOWS_H_

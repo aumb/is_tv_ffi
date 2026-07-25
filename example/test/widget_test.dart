@@ -1,27 +1,37 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:is_tv_ffi/src/is_tv.dart';
 import 'package:is_tv_ffi_example/main.dart';
 
+class _FakeIsTv extends IsTv {
+  _FakeIsTv({required this.isTv});
+
+  @override
+  final bool isTv;
+}
+
 void main() {
-  testWidgets('Verify Platform version', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  tearDown(() {
+    // ignore: invalid_use_of_internal_member
+    IsTv.setInstance(null);
+  });
+
+  testWidgets('shows the TV detection result', (WidgetTester tester) async {
+    // ignore: invalid_use_of_internal_member
+    IsTv.setInstance(_FakeIsTv(isTv: true));
+
     await tester.pumpWidget(const MyApp());
 
-    // Verify that platform version is retrieved.
-    expect(
-      find.byWidgetPredicate(
-        (Widget widget) => widget is Text &&
-                           widget.data!.startsWith('Running on:'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Is device a tv: true'), findsOneWidget);
+  });
+
+  testWidgets('shows false when the device is not a TV', (
+    WidgetTester tester,
+  ) async {
+    // ignore: invalid_use_of_internal_member
+    IsTv.setInstance(_FakeIsTv(isTv: false));
+
+    await tester.pumpWidget(const MyApp());
+
+    expect(find.text('Is device a tv: false'), findsOneWidget);
   });
 }

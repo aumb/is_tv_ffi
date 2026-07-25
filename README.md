@@ -14,7 +14,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-    is_tv_ffi: ^0.6.0
+    is_tv_ffi: ^0.7.0
 ```
 
 ## Usage
@@ -23,13 +23,15 @@ dependencies:
 import 'package:is_tv_ffi/is_tv_ffi.dart';
 
 // Check if the device is a TV
-final isTv = IsTvFfi().isTv;
+final isTv = const IsTvFfi().isTv;
 if (isTv) {
   print('Running on a TV');
 } else {
   print('Not running on a TV');
 }
 ```
+
+`isTv` is a synchronous native call, so there is nothing to await.
 
 ## Desktop Usage
 
@@ -40,7 +42,7 @@ For Linux and Windows, the plugin determines if it's a TV environment by checkin
 Before running your app, set the following environment variable:
 
 - **Variable:** `FLUTTER_IS_TV`
-- **Value:** `1` or `true`
+- **Value:** `1`, `true`, `yes` or `on` (matched case-insensitively)
 
 #### Linux / macOS Terminal
 
@@ -62,19 +64,22 @@ set FLUTTER_IS_TV=1
 flutter run -d windows
 ```
 
-The plugin also automatically detects TV mode if it recognizes a Steam Big Picture session on Linux, or a potential Xbox environment on Windows.
+On Linux the plugin additionally recognises Steam Big Picture and SteamOS gaming sessions. Windows has no such heuristic: `FLUTTER_IS_TV` is the only signal it uses.
 
 ## Implementation Details
 
 ### Android
 
-Uses `UiModeManager` to check if the current OS is Android TV.
+Uses `UiModeManager` to check if the current OS is Android TV, falling back to the leanback system feature for TV boxes that report a non-television UI mode.
 
 ```kotlin
 fun isTv(context: Context): Boolean {
-  val uiModeManager =
-    context.getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
-  return uiModeManager.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION
+  val uiModeManager = context.getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager
+  if (uiModeManager?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION) {
+    return true
+  }
+
+  return context.packageManager?.hasSystemFeature(PackageManager.FEATURE_LEANBACK) == true
 }
 ```
 
@@ -84,13 +89,13 @@ Uses `UIDevice` to check if the current device's user interface idiom is `.tv`.
 
 ```swift
 public func isTV() -> Bool {
-  return UIDevice.current.userInterfaceIdiom == .tv
+  return device.userInterfaceIdiom == .tv
 }
 ```
 
 ### macOS
 
-Always returns `false`. This implementation checks the device's `userInterfaceIdiom`, which will not be `.tv` on a macOS device.
+Always returns `false`. macOS never reports a TV user interface idiom; the native symbol exists so that the FFI surface stays uniform across Apple platforms.
 
 ```swift
 public func isTV() -> Bool {
@@ -100,83 +105,61 @@ public func isTV() -> Bool {
 
 ### Linux
 
-Checks for the `FLUTTER_IS_TV` environment variable, or for variables indicating a Steam Big Picture session.
+Checks the `FLUTTER_IS_TV` environment variable, then the variables that indicate a Steam Big Picture or SteamOS gaming session. Which of those is set depends on the distribution and compositor, so several are checked.
 
 ```cpp
 bool is_tv() {
-    const char* env_is_tv = std::getenv("FLUTTER_IS_TV");
-    if (env_is_tv != nullptr && (strcmp(env_is_tv, "1") == 0 || strcmp(env_is_tv, "true") == 0)) {
-        return true;
-    }
+  return IsTruthy(std::getenv("FLUTTER_IS_TV")) || IsSteamBigPictureSession();
+}
 
-    const char* env_xdg_desktop = std::getenv("XDG_SESSION_DESKTOP");
-    if (env_xdg_desktop != nullptr && strcmp(env_xdg_desktop, "steam") == 0) {
-        return true;
-    }
+bool IsSteamBigPictureSession() {
+  const char* session_desktop = std::getenv("XDG_SESSION_DESKTOP");
+  const char* current_desktop = std::getenv("XDG_CURRENT_DESKTOP");
 
-    return false;
+  return EqualsIgnoreCase(session_desktop, "steam") ||
+         EqualsIgnoreCase(session_desktop, "steamos") ||
+         EqualsIgnoreCase(current_desktop, "gamescope") ||
+         IsTruthy(std::getenv("SteamDeck"));
 }
 ```
 
 ### Windows
 
-Checks for the `FLUTTER_IS_TV` environment variable, or if the `USERNAME` is `SYSTEM` (a heuristic for Xbox environments).
+Checks the `FLUTTER_IS_TV` environment variable.
 
 ```cpp
 bool is_tv() {
-    char* env_value;
-    size_t len;
+  char* env_value = nullptr;
+  size_t len = 0;
 
-    if (_dupenv_s(&env_value, &len, "FLUTTER_IS_TV") == 0 && env_value != nullptr) {
-        bool is_tv_flag = (strcmp(env_value, "1") == 0 || strcmp(env_value, "true") == 0);
-        free(env_value);
-        if (is_tv_flag) {
-            return true;
-        }
-    }
-
-    if (_dupenv_s(&env_value, &len, "USERNAME") == 0 && env_value != nullptr) {
-        bool is_system_user = (strcmp(env_value, "SYSTEM") == 0);
-        free(env_value);
-        if (is_system_user) {
-            return true;
-        }
-    }
-
+  if (_dupenv_s(&env_value, &len, "FLUTTER_IS_TV") != 0) {
     return false;
+  }
+
+  const bool result = IsTruthy(env_value);
+  free(env_value);
+
+  return result;
 }
 ```
 
 ### Web
 
-Evaluates the browser's user agent string against a pre-defined list of keywords common to TV devices (e.g., WebOS, Tizen, Chromecast).
+Checks for the JavaScript globals that smart-TV runtimes inject (`tizen`, `webOS`, `webOSSystem`) — these are harder to spoof than a user agent — then falls back to matching the user agent against a list of TV keywords and patterns.
 
 ```dart
-bool get isTv {
-  final userAgent = window.navigator.userAgent.toLowerCase();
+bool isTv() =>
+    _hasTvPlatformGlobal() || matchesTvUserAgent(window.navigator.userAgent);
 
-  const tvKeywords = [
-    'webos',      // LG WebOS TVs
-    'tizen',      // Samsung Tizen TVs
-    'googletv',   // Google TV
-    'android tv', // Android TV devices
-    'smart-tv',   // Generic term
-    'appletv',    // Apple TV
-    'crkey',      // Google Chromecast
-    'aft',        // Amazon Fire TV
-    'viera',      // Panasonic Viera Cast
-    'netcast',    // LG NetCast TVs
-    'dtv',        // Digital TV
-    'shield',     // NVIDIA Shield
-  ];
+static bool matchesTvUserAgent(String userAgent) {
+  final normalized = userAgent.toLowerCase();
 
-  if (RegExp(r'\btv\b').hasMatch(userAgent)) {
-    return true;
-  }
-
-  return tvKeywords.any((keyword) => userAgent.contains(keyword));
+  return _tvPatterns.any((pattern) => pattern.hasMatch(normalized)) ||
+      _tvKeywords.any(normalized.contains);
 }
 ```
+
+The keyword list covers webOS, Tizen, Google TV, Chromecast, Fire TV, Apple TV, Bravia, VIDAA, Roku, HbbTV, NetCast, Net TV, CE-HTML and Opera TV. Patterns are used where a bare substring would misfire — Fire TV model codes (`AFTB`, `AFTMM`) are matched as whole words so that ordinary user agents containing "aft" are not treated as TVs.
 
 ## Contributing
 

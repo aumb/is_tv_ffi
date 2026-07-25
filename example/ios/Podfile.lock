@@ -1,28 +1,22 @@
 PODS:
   - Flutter (1.0.0)
-  - integration_test (0.0.1):
-    - Flutter
-  - is_tv_ffi (0.0.1):
+  - is_tv_ffi (0.7.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - is_tv_ffi (from `.symlinks/plugins/is_tv_ffi/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  integration_test:
-    :path: ".symlinks/plugins/integration_test/ios"
   is_tv_ffi:
     :path: ".symlinks/plugins/is_tv_ffi/ios"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  is_tv_ffi: 5982b848b3de1d8ceee5d8ec19b1266b0d3eb709
+  is_tv_ffi: c2f606fccdd54be02506de3c5535541ef1b2f0dc
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 
-COCOAPODS: 1.15.0
+COCOAPODS: 1.17.0

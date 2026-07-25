@@ -2,15 +2,15 @@ name: Flutter Plugin CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  platforms_tests:
-    name: Analyze & Platforms Unit Tests
+  analyze:
+    name: Format, Analyze & Publish Check
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,19 +18,31 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
+          cache: true
 
       - name: Get dependencies
         run: flutter pub get
+
+      - name: Get example dependencies
+        run: flutter pub get
+        working-directory: example
+
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
 
       - name: Run analyzer
         run: flutter analyze
 
-      - name: Run Native Unit Tests
-        run: flutter test -r expanded test/entry_points/platforms_tests.dart
+      - name: Run analyzer on the example
+        run: flutter analyze
+        working-directory: example
 
-  web_tests:
-    name: Web Unit Tests
+      - name: Check the package can be published
+        run: flutter pub publish --dry-run
+
+  dart_tests:
+    name: Dart Unit Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -40,10 +52,105 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: "stable"
+          cache: true
 
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Run Web Unit Tests
+      - name: Run platform unit tests
+        run: flutter test -r expanded test/entry_points/platforms_tests.dart
+
+      - name: Run web unit tests
         run: flutter test -r expanded --platform chrome test/entry_points/web_tests.dart
+
+      - name: Run example widget tests
+        run: flutter test -r expanded
+        working-directory: example
+
+  android_tests:
+    name: Android Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: "platforms;android-36"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Kotlin unit tests
+        run: ./gradlew test
+        working-directory: android
+
+  linux_native_tests:
+    name: Linux Native Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Install Linux build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev
+
+      - name: Build the example
+        run: flutter build linux --debug
+        working-directory: example
+
+      - name: Run the gtest suite
+        run: |
+          test_binary="$(find example/build/linux -type f -name is_tv_ffi_test | head -n 1)"
+          if [ -z "$test_binary" ]; then
+            echo "::error::is_tv_ffi_test was not built"
+            exit 1
+          fi
+          "$test_binary"
+
+  windows_native_tests:
+    name: Windows Native Unit Tests
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Build the example
+        run: flutter build windows --debug
+        working-directory: example
+
+      - name: Run the gtest suite
+        shell: pwsh
+        run: |
+          $testBinary = Get-ChildItem -Path example/build/windows -Recurse -Filter is_tv_ffi_test.exe |
+            Select-Object -First 1
+          if (-not $testBinary) {
+            Write-Output "::error::is_tv_ffi_test.exe was not built"
+            exit 1
+          }
+          & $testBinary.FullName

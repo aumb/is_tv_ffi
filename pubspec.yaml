@@ -1,5 +1,8 @@
 name: is_tv_ffi
-description: "A Flutter plugin to detect if the current device is a TV"
+description: >-
+  Detects whether a Flutter app is running on a TV: Android TV, tvOS, webOS,
+  Tizen and TV-mode Linux and Windows, using FFI and JNI rather than platform
+  channels.
 version: 0.7.0
 homepage: https://github.com/aumb/is_tv_ffi
 repository: https://github.com/aumb/is_tv_ffi
@@ -7,6 +10,9 @@ issue_tracker: https://github.com/aumb/is_tv_ffi/issues
 topics:
   - tv
   - ffi
+  - android-tv
+  - tvos
+  - smart-tv
 
 environment:
   sdk: ^3.8.1
